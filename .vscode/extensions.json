@@ -2,13 +2,8 @@
   "recommendations": [
     "ms-python.python",
     "tamasfe.even-better-toml",
-    "esbenp.prettier-vscode",
     "charliermarsh.ruff",
-    "ms-python.vscode-pylance",
-    "aaron-bond.better-comments",
     "vscode-icons-team.vscode-icons",
-    "mechatroner.rainbow-csv",
-    "dracula-theme.theme-dracula",
-    "vscode-icons-team.vscode-icons"
+    "dracula-theme.theme-dracula"
   ]
 }

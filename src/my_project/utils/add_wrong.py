@@ -1,7 +1,7 @@
-"""Module for the add function."""
+"""Module for the a wrong add function."""
 
 
-def add(a: float, b: float) -> float:
+def add_wrong(a: float, b: float) -> str:
     """Add two numbers together.
 
     Args:
@@ -12,4 +12,5 @@ def add(a: float, b: float) -> float:
         The sum of the two numbers.
 
     """
-    return a + b
+    c = a + b
+    return c
