@@ -10,6 +10,8 @@ Template padrão para projetos Python modernos. Use este repositório como ponto
 - [Pré-requisitos](#pré-requisitos)
 - [Como usar o template (passo a passo)](#como-usar-o-template-passo-a-passo)
 - [Estrutura de arquivos do template](#estrutura-de-arquivos-do-template)
+  - [A pasta `utils`: funções auxiliares](#a-pasta-utils-funções-auxiliares)
+  - [A pasta `scripts`: scripts auxiliares](#a-pasta-scripts-scripts-auxiliares)
 - [Dicas para quem está começando](#dicas-para-quem-está-começando)
 - [Resumo rápido (checklist)](#resumo-rápido-checklist)
 
@@ -19,11 +21,13 @@ Template padrão para projetos Python modernos. Use este repositório como ponto
 
 O **Pavarotti Template** é um esqueleto de projeto Python já configurado com:
 
-- **uv** para gerenciar a versão do Python e o ambiente virtual (não é preciso instalar Python manualmente)
+- **uv** para gerenciar a versão do Python e o ambiente virtual (não é
+  preciso instalar Python manualmente)
 - **Ambiente virtual** (`.venv`) para isolar dependências
 - **Ruff** para formatação e análise estática de código (lint)
 - **Pyright** para checagem de tipos
 - **Configurações do VS Code/Cursor** (formatação ao salvar, extensões recomendadas)
+- **Estrutura** recomendada de pastas e arquivos para o seu projeto
 
 ---
 
@@ -98,13 +102,13 @@ Esse arquivo tem uma única linha com a versão do Python que o **uv** e a IDE u
 - **Recomendamos a versão 3.12** (já é a padrão do template): estável e bem suportada pelas ferramentas do template (Ruff, Pyright, Pytest).
 - **A escolha é livre:** se você quiser outra versão (por exemplo 3.11 ou 3.13), edite o `.python-version` e coloque apenas o número, por exemplo:
 
-  ```
+  ```text
   3.11
   ```
 
   ou
 
-  ```
+  ```text
   3.13
   ```
 
@@ -244,7 +248,7 @@ uv run pytest -v
 
 Estrutura de pastas do projeto:
 
-```
+```text
 raiz_do_projeto/
 ├── .gitignore
 ├── .python-version
@@ -252,21 +256,17 @@ raiz_do_projeto/
 ├── .vscode/
 │   ├── settings.json
 │   └── extensions.json
-├── config/
-│   └── default.yaml
 ├── pyproject.toml
 ├── README.md
-├── scripts/                   # opcional
+├── scripts/                   # scripts auxiliares (gráficos, análises, etc.)
 │   └── __init__.py
 ├── src/
-│   └── <my_project>/     # pacote principal (ex.: my_project)
+│   └── <my_project>/         # pacote principal (ex.: my_project)
 │       ├── __init__.py
 │       ├── main.py            # ponto de entrada
-│       ├── cfg/               # opcional
-│       ├── core/              # opcional
-│       ├── schemas/           # opcional
-│       ├── typing/            # opcional
-│       └── utils/             # uso geral
+│       └── utils/             # funções auxiliares reutilizáveis
+│           ├── __init__.py
+│           └── add.py         # exemplo: função add
 └── tests/
 ```
 
@@ -282,22 +282,76 @@ raiz_do_projeto/
 | `.vscode/extensions.json` | Extensões recomendadas (Python, Ruff, Pylance, tema Dracula, etc.).                                        |
 | `README.md`               | Este arquivo: instruções de uso do template.                                                               |
 
+### A pasta `utils`: funções auxiliares
+
+A pasta **`src/<projeto>/utils/`** serve para **adicionar funções auxiliares** reutilizáveis em todo o projeto. São funções que não representam a lógica principal da aplicação, mas ajudam em tarefas comuns: cálculos, formatação, leitura/escrita de arquivos, validações simples, etc.
+
+**Como adicionar e usar uma função auxiliar (exemplo com `add`):**
+
+1. **Crie o arquivo da função** dentro de `utils/`. Por exemplo, em `src/my_project/utils/add.py`:
+
+   ```python
+   def add(a: float, b: float) -> float:
+       """Soma dois números."""
+       return a + b
+   ```
+
+2. **Exporte a função no `__init__.py` de `utils`** (`src/my_project/utils/__init__.py`):
+
+   ```python
+   from .add import add
+
+   __all__ = ["add"]
+   ```
+
+3. **Importe e use no `main.py`** (ou em qualquer outro módulo do projeto):
+
+   ```python
+   from my_project.utils import add
+
+   def main() -> None:
+       print("Hello from Pavarotti Template!")
+       print(f"Soma de 1 + 1 = {add(1, 1)}")
+   ```
+
+Assim, sempre que precisar de uma nova função auxiliar, crie um novo arquivo em `utils/`, exporte no `utils/__init__.py` e importe onde for usar (por exemplo `from my_project.utils import minha_funcao`).
+
+---
+
+### A pasta `scripts`: scripts auxiliares
+
+A pasta **`scripts/`** (na raiz do projeto) é destinada a **scripts que realizam tarefas auxiliares**, executados sob demanda e **não** como ponto de entrada principal do projeto. Ou seja: o que roda com `uv run nome_do_projeto` é o `main.py`; os arquivos em `scripts/` são para atividades complementares.
+
+**Exemplos do que colocar em `scripts/`:**
+
+- **Plotar gráficos**: scripts que leem dados (CSV, banco, etc.) e geram figuras (matplotlib, seaborn, plotly).
+- **Análise estatística de dados**: scripts que calculam médias, desvios, correlações, testes estatísticos, etc.
+- **Pré-processamento ou export**: converter formatos, gerar relatórios, exportar resultados para planilhas ou outros sistemas.
+- **Tarefas one-off**: automações pontuais, migrações de dados, geração de arquivos de configuração.
+
+**Como executar um script em `scripts/`:**
+
+```bash
+uv run python scripts/meu_script.py
+```
+
+Ou, se o script precisar importar o pacote do projeto (por exemplo `my_project`), o `pyproject.toml` já configura o `pythonpath` com `src`, então use algo como `from my_project.utils import ...` dentro do script e rode com `uv run python scripts/meu_script.py`.
+
+Em resumo: **`main.py`** é o coração do projeto (o que você roda no dia a dia); **`scripts/`** reúne ferramentas auxiliares como gráficos, análises e automações que você executa quando precisar.
+
+---
+
 ### Pastas e uso recomendado
 
-| Pasta                        | Obrigatória? | O que colocar e como usar                                                                                                                                                                                                                                    |
-| ---------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **`config/`**                | Opcional     | Arquivos de configuração (ex.: YAML, JSON). Use para parâmetros do projeto que variam por ambiente. O `config/default.yaml` traz um exemplo de carregamento com PyYAML.                                                                                      |
-| **`scripts/`**               | Opcional     | Scripts de linha de comando ou automação que **não** são o entrypoint principal do projeto (ex.: scripts de pré-processamento, export, one-offs). Rode com `uv run python scripts/meu_script.py`. Não substitui o `main.py` definido em `[project.scripts]`. |
-| **`src/<projeto>/`**         | Sim          | Pacote principal. O nome da pasta deve ser o mesmo do projeto (definido no `pyproject.toml`). Todo o código importável do projeto fica aqui.                                                                                                                 |
-| **`src/<projeto>/main.py`**  | Sim          | Ponto de entrada do projeto. É o que roda quando você executa `uv run nome_do_projeto`. Concentre aqui a orquestração (leitura de config, chamada da lógica em `core` ou em outros módulos).                                                                 |
-| **`src/<projeto>/utils/`**   | Uso geral    | Funções e classes utilitárias reutilizáveis (formatação, I/O, helpers). Use em qualquer parte do projeto; não contém a lógica de negócio principal.                                                                                                          |
-| **`src/<projeto>/core/`**    | Opcional     | Lógica central e regras de negócio do projeto. Coloque aqui o “cérebro” do experimento ou da aplicação, separado de I/O e de configuração.                                                                                                                   |
-| **`src/<projeto>/cfg/`**     | Opcional     | Código de carregamento e validação de configuração (ex.: ler YAML do `config/`, expor objetos de config para o resto do projeto). Útil quando a configuração é mais que um arquivo estático.                                                                 |
-| **`src/<projeto>/schemas/`** | Opcional     | Modelos e schemas **Pydantic** (validação de dados, serialização, tipos estruturados). Use quando precisar de validação forte de entradas, config ou dados entre etapas. Requer dependência `pydantic` no `pyproject.toml`.                                  |
-| **`src/<projeto>/typing/`**  | Opcional     | Definições de tipos reutilizáveis que não são modelos Pydantic. Ajuda a manter type hints consistentes em todo o projeto.                                                                                                                                    |
-| **`tests/`**                 | Recomendado  | Testes (Pytest). Crie arquivos `test_*.py` e rode com `uv run pytest`. O `pyproject.toml` já configura `pythonpath = ["src"]` para importar o pacote.                                                                                                        |
+| Pasta                       | Obrigatória? | O que colocar e como usar                                                                                                                                                                                                       |
+| --------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`scripts/`**              | Opcional     | Scripts auxiliares: plotar gráficos, análise estatística de dados, pré-processamento, export, automações. Rode com `uv run python scripts/meu_script.py`. Não substitui o `main.py` definido em `[project.scripts]`.            |
+| **`src/<projeto>/`**        | Sim          | Pacote principal. O nome da pasta deve ser o mesmo do projeto (definido no `pyproject.toml`). Todo o código importável do projeto fica aqui.                                                                                    |
+| **`src/<projeto>/main.py`** | Sim          | Ponto de entrada do projeto. É o que roda quando você executa `uv run nome_do_projeto`. Concentre aqui a orquestração e as chamadas às funções em `utils` ou outros módulos.                                                    |
+| **`src/<projeto>/utils/`**  | Uso geral    | **Funções auxiliares** reutilizáveis (ex.: `add`). Crie um arquivo por função (ou grupo de funções), exporte no `utils/__init__.py` e importe no `main` ou em outros módulos com `from my_project.utils import nome_da_funcao`. |
+| **`tests/`**                | Recomendado  | Testes (Pytest). Crie arquivos `test_*.py` e rode com `uv run pytest`. O `pyproject.toml` já configura `pythonpath = ["src"]` para importar o pacote.                                                                           |
 
-Pastas opcionais podem ser removidas se não forem usadas; o template inclui todas para servir de referência. **`utils`** e **`main.py`** são os pontos de uso mais geral; **`schemas`**, **`core`**, **`cfg`** e **`typing`** são para organizar projetos maiores ou com mais estrutura.
+O template inclui um exemplo em **`utils/add.py`** e a importação no **`main.py`** para você seguir o mesmo padrão ao adicionar novas funções auxiliares.
 
 ---
 
