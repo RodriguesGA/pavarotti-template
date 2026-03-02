@@ -145,9 +145,9 @@ ou (para ter também as dependências de desenvolvimento)
 uv sync --extra dev
 ```
 
-O uv lê o `.python-version`, usa ou baixa a versão do Python indicada, cria a pasta `.venv`, instala o projeto em modo editável e todas as dependências do `pyproject.toml` (incluindo as de desenvolvimento: ruff, pyright, pytest). Nos próximos passos, use sempre `uv run` para rodar comandos; ele usa o ambiente do projeto automaticamente.
+O uv lê o `.python-version`, usa ou baixa a versão do Python indicada, cria a pasta `.venv`, instala o projeto em modo editável e todas as dependências do `pyproject.toml` (incluindo as de desenvolvimento: ruff, pyright). Nos próximos passos, use sempre `uv run` para rodar comandos; ele usa o ambiente do projeto automaticamente.
 
-Ao chamar `uv run` (por exemplo `uv run my_project` ou `uv run pytest`), o uv executa um `uv sync` automaticamente se o ambiente ainda não estiver em dia com o `pyproject.toml` e o lockfile. Assim, você não precisa lembrar de rodar `uv sync` toda vez que tiver alterado as dependências. Em outras palavras, o uv faz tudo sozinho contato que você rode seu projeto e scripts
+Ao chamar `uv run` (por exemplo `uv run my_project`), o uv executa um `uv sync` automaticamente se o ambiente ainda não estiver em dia com o `pyproject.toml` e o lockfile. Assim, você não precisa lembrar de rodar `uv sync` toda vez que tiver alterado as dependências. Em outras palavras, o uv faz tudo sozinho contato que você rode seu projeto e scripts
 com `uv run`.
 
 ---
@@ -192,7 +192,7 @@ Use `uv run` para executar comandos no ambiente do projeto (não é preciso ativ
 Para incluir novas bibliotecas no projeto, use o **uv** na raiz do repositório:
 
 - **Dependência de produção** (usada quando o projeto roda): `uv add package_name`
-- **Dependência de desenvolvimento** (só para desenvolvimento, ex.: pytest, ruff): `uv add --dev package_name`
+- **Dependência de desenvolvimento** (só para desenvolvimento, ex.: ruff): `uv add --dev package_name`
 
 O uv atualiza o `pyproject.toml` e o `uv.lock` e instala o pacote no ambiente.
 
@@ -265,15 +265,19 @@ raiz_do_projeto/
 
 ### Arquivos na raiz
 
-| Item                      | Descrição                                                                                                  |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `pyproject.toml`          | Configuração do projeto: nome, versão, dependências, Ruff, Pyright, Pytest e Setuptools.                   |
-| `.python-version`         | Indica a versão do Python para o **uv** e para a IDE; o uv usa esse arquivo para criar o ambiente correto. |
-| `.venv/`                  | Ambiente virtual (criado pelo **uv** com `uv sync` ou `uv venv`). Não é versionado no Git.                 |
-| `.gitignore`              | Lista de arquivos e pastas que o Git deve ignorar (ex.: `__pycache__`, `.venv`).                           |
-| `.vscode/settings.json`   | Configurações do workspace para VS Code/Cursor (fonte, formatação, Ruff, Python).                          |
-| `.vscode/extensions.json` | Extensões recomendadas (Python, Ruff, tema Dracula, etc.).                                                 |
-| `README.md`               | Este arquivo: instruções de uso do template.                                                               |
+- `pyproject.toml`: Configuração do projeto: nome, versão, dependências, Ruff, Pyright, e Setuptools.
+
+- `.python-version`: Indica a versão do Python para o **uv** e para a IDE; o uv usa esse arquivo para criar o ambiente correto.
+
+- `.venv/`:Ambiente virtual (criado pelo **uv** com `uv sync` ou `uv venv`). Não é versionado no Git.
+
+- `.gitignore`: Lista de arquivos e pastas que o Git deve ignorar (ex.: `__pycache__`, `.venv`).
+
+- `.vscode/settings.json`: Configurações do workspace para VS Code/Cursor (fonte, formatação, Ruff, Python).
+
+- `.vscode/extensions.json`: Extensões recomendadas (Python, Ruff, tema Dracula, etc.).
+
+- `README.md`: Este arquivo: instruções de uso do template.
 
 ### A pasta `utils`: funções auxiliares
 
@@ -283,12 +287,6 @@ A pasta **`src/<projeto>/utils/`** serve para **adicionar funções auxiliares**
 
 1. **Crie o arquivo da função** dentro de `utils/`. Por exemplo, em `src/my_project/utils/add.py`:
 
-   ```python
-   def add(a: float, b: float) -> float:
-       """Soma dois números."""
-       return a + b
-   ```
-
 2. **Exportar no `__init__.py` de `utils` é opcional.** Se quiser importar com `from my_project.utils import add`, adicione em `src/my_project/utils/__init__.py`:
 
    ```python
@@ -296,8 +294,6 @@ A pasta **`src/<projeto>/utils/`** serve para **adicionar funções auxiliares**
 
    __all__ = ["add"]
    ```
-
-   Se não exportar no `__init__.py`, você pode importar direto do módulo (veja o passo 3).
 
 3. **Importe e use no `main.py`** (ou em qualquer outro módulo do projeto). Duas formas:
    - **Se exportou no `__init__.py`:** `from my_project.utils import add`
