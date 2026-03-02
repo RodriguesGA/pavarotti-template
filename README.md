@@ -35,26 +35,22 @@ O **Pavarotti Template** é um esqueleto de projeto Python já configurado com:
 Antes de usar o template, você precisa ter instalado no computador:
 
 1. **Editor de código**
-
    - Recomendamos **VS Code** ou **Cursor**. O projeto já traz configurações e extensões sugeridas para eles.
 
 2. **Extensão do Ruff**
-
    - Instale a extensão **Ruff** no VS Code ou no Cursor (por exemplo, pela paleta de comandos: “Extensions: Install Extensions” e busque por “Ruff”). O template usa o Ruff para formatação e análise estática do código; com a extensão, você tem realce e correções integrados ao editor.
 
 3. **uv** (gerenciador de projetos e ambientes Python)
-
    - Com o **uv** instalado, você não precisa instalar nenhuma versão específica do Python: o uv baixa e gerencia a versão correta automaticamente.
    - **Como verificar:** abra um terminal e digite `uv --version`. Se aparecer a versão, o uv já está instalado.
    - **Como instalar o uv:**
-
      - **Via pip:** se você já tem o **pip** instalado (o pip vem junto com o Python), pode instalar o uv com:
 
        ```bash
        pip install uv
        ```
 
-       É necessário ter o pip disponível no sistema; caso não tenha Python/pip instalado, use uma das opções acima (PowerShell, curl, etc.), pois o uv pode gerenciar o Python por conta própria.
+       É necessário ter o pip disponível no sistema; caso não tenha Python/pip instalado, use uma das opções abaixo (PowerShell, curl, etc.), pois o uv pode gerenciar o Python por conta própria.
 
      - **Windows (PowerShell):** execute no PowerShell:
 
@@ -85,8 +81,8 @@ Antes de usar o template, você precisa ter instalado no computador:
 
 Você pode fazer de duas formas:
 
-**Opção A – Clonar com Git (recomendado)**  
-Se o template estiver em um repositório (GitHub, GitLab, etc.):
+**Opção A – Clonar com Git diretamente (recomendado)**  
+Clone o template diretamente do repositório no Github:
 
 ```bash
 git clone <URL_DO_REPOSITORIO_DO_TEMPLATE> my_project
@@ -95,38 +91,36 @@ cd my_project
 
 Troque `my_project` pelo nome que você quer dar ao seu projeto.
 
-**Opção B – Copiar a pasta manualmente**  
-Copie toda a pasta do Pavarotti Template para o local desejado e renomeie
-a pasta para o nome do seu projeto. Depois abra essa pasta no seu editor
-de código.
+**Opção B – Baixar o repositório como zip**  
+Acesse o repositório do Github clique no ícone verde `<> code` e em seguida em
+`Download ZIP`. Em seguida, basta descompactar o ZIP na pasta desejada no seu computador.
 
 ---
 
 ### Passo 2: Configurar pyproject.toml e .python-version
 
-Antes de criar o ambiente virtual, configure o nome do projeto e a versão do Python. São as únicas alterações obrigatórias (ou desejadas) nessa etapa. No `pyproject.toml`, as linhas a alterar são as indicadas abaixo.
+Configure o nome do projeto e a versão do Python. São as únicas alterações obrigatórias (ou desejadas) nessa etapa. A
+seguir então detalhados os arquivos e linhas que demandam configuração/personalização.
 
 #### Arquivo `.python-version`
 
 Esse arquivo tem uma única linha com a versão do Python que o **uv** e a IDE usarão para o projeto.
 
-- **Recomendamos a versão 3.12** (já é a padrão do template): estável e bem suportada pelas ferramentas do template (Ruff, Pyright, Pytest).
-- **A escolha é livre:** se você quiser outra versão (por exemplo 3.11 ou 3.13), edite o `.python-version` e coloque apenas o número. Se mudar a versão, ajuste também o `pyproject.toml` (veja abaixo) para manter consistência.
+- **Recomendamos a versão 3.12** (já é a padrão do template): estável e bem suportada pelas ferramentas do template.
+- **A escolha é livre:** se você quiser outra versão (por exemplo 3.11 ou 3.14), edite o `.python-version` e coloque apenas o número. Se mudar a versão, ajuste também o `pyproject.toml` (veja abaixo) para manter consistência.
 
 #### Arquivo `pyproject.toml`
 
 Nele ficam o nome do projeto, a versão do Python exigida, dependências e configurações das ferramentas. **As únicas mudanças necessárias são:**
 
 1. **Trocar `my_project` pelo nome do seu projeto**  
-   O template usa o nome genérico `my_project`. Substitua pelo nome do seu projeto (em minúsculas, sem espaços; ex.: `meu_experimento`) nas seguintes linhas do `pyproject.toml`:
-
+   O template usa o nome genérico `my_project`. Substitua pelo nome do seu projeto (em minúsculas, sem espaços).
    - **Linha 4:** `name = "my_project"`
    - **Linha 15:** `my_project = "my_project.main:main"` → `meu_experimento = "meu_experimento.main:main"`
-   - **Linha 41:** `known-first-party = ["my_project"]` → `known-first-party = ["meu_experimento"]`
+   - **Linha 42:** `known-first-party = ["my_project"]` → `known-first-party = ["meu_experimento"]`
 
 2. **Modificar a versão do Python, caso desejado**  
    Se você alterou o `.python-version` para outra versão, atualize no `pyproject.toml`:
-
    - **Linha 8:** `requires-python = ">=3.12"` → ex.: `">=3.11"` ou `">=3.13"`.
    - **Linha 18** (`[tool.ruff]`): `target-version = "py312"` → ex.: `"py311"` ou `"py313"`.
    - **Linha 48** (`[tool.pyright]`): `pythonVersion = "3.12"` → ex.: `"3.11"` ou `"3.13"` (mesma do `.python-version`).
@@ -153,7 +147,8 @@ uv sync --extra dev
 
 O uv lê o `.python-version`, usa ou baixa a versão do Python indicada, cria a pasta `.venv`, instala o projeto em modo editável e todas as dependências do `pyproject.toml` (incluindo as de desenvolvimento: ruff, pyright, pytest). Nos próximos passos, use sempre `uv run` para rodar comandos; ele usa o ambiente do projeto automaticamente.
 
-Ao chamar `uv run` (por exemplo `uv run my_project` ou `uv run pytest`), o uv executa um `uv sync` automaticamente se o ambiente ainda não estiver em dia com o `pyproject.toml` e o lockfile. Assim, você não precisa lembrar de rodar `uv sync` toda vez que tiver alterado as dependências. Em outras palavras, o uv faz tudo sozinho.
+Ao chamar `uv run` (por exemplo `uv run my_project` ou `uv run pytest`), o uv executa um `uv sync` automaticamente se o ambiente ainda não estiver em dia com o `pyproject.toml` e o lockfile. Assim, você não precisa lembrar de rodar `uv sync` toda vez que tiver alterado as dependências. Em outras palavras, o uv faz tudo sozinho contato que você rode seu projeto e scripts
+com `uv run`.
 
 ---
 
@@ -164,7 +159,7 @@ O `pyproject.toml` espera o código dentro de uma pasta `src` e um pacote com o 
 - Dentro de `src`, mude o nome da pasta 'my_project' para o nome definido para o seu projeto.
 
 Assim, o comando definido em `[project.scripts]` no `pyproject.toml` (ex.: `my_project = "my_project.main:main"`)
-funcionará corretamente. Se você já ajustou `known-first-party` no Passo 2, não é preciso alterar de novo.
+funcionará corretamente.
 
 ---
 
@@ -172,13 +167,11 @@ funcionará corretamente. Se você já ajustou `known-first-party` no Passo 2, n
 
 Use `uv run` para executar comandos no ambiente do projeto (não é preciso ativar o `.venv` antes):
 
-- **Se o script estiver configurado em `[project.scripts]` no `pyproject.toml`** (ex.: `meu_experimento = "meu_experimento.main:main"`):
+- **Se o script estiver configurado em `[project.scripts]` no `pyproject.toml`** (ex.: `my_project = "my_project.main:main"`):
 
   ```bash
-  uv run nome_do_seu_projeto
+  uv run my_project
   ```
-
-  (troque `nome_do_seu_projeto` pelo nome que você definiu em `[project.scripts]`.)
 
 - **Para rodar um arquivo Python diretamente** (ex.: `main.py` na raiz ou dentro de `src`):
 
@@ -186,16 +179,20 @@ Use `uv run` para executar comandos no ambiente do projeto (não é preciso ativ
   uv run python main.py
   ```
 
-  O uv usa o ambiente do projeto (`.venv`) automaticamente.
+- **Para rodar um arquivo Python na pasta scripts da raiz** (ex.: `plot_script.py`):
+
+  ```bash
+  uv run python scripts/plot_script.py
+  ```
 
 ---
 
-### Passo 6: Como adicionar dependências
+### Passo 6: Adicionando dependências externas ao seu projeto
 
 Para incluir novas bibliotecas no projeto, use o **uv** na raiz do repositório:
 
-- **Dependência de produção** (usada quando o projeto roda): `uv add nome_do_pacote`
-- **Dependência de desenvolvimento** (só para desenvolvimento/testes, ex.: pytest, ruff): `uv add --dev nome_do_pacote`
+- **Dependência de produção** (usada quando o projeto roda): `uv add package_name`
+- **Dependência de desenvolvimento** (só para desenvolvimento, ex.: pytest, ruff): `uv add --dev package_name`
 
 O uv atualiza o `pyproject.toml` e o `uv.lock` e instala o pacote no ambiente.
 
@@ -205,16 +202,10 @@ O uv atualiza o `pyproject.toml` e o `uv.lock` e instala o pacote no ambiente.
 uv add numpy
 ```
 
-Depois você pode usar no código, por exemplo em `main.py` ou em um script em `scripts/`:
+Alternativamente, é possível adicionar dependências diretametne em `pyproject.toml` no campo `dependencies` de `[project]`.
+Inclusive, é isso que o uv faz automaticamente quando você faz `uv add package_name`.
 
-```python
-import numpy as np
-
-arr = np.array([1, 2, 3])
-print(arr.sum())  # 6
-```
-
-Para remover uma dependência: `uv remove nome_do_pacote`.
+Para remover uma dependência: `uv remove nome_do_pacote`. Também é possível remover uma dependência apagando em `pyproject.toml` no campo `dependencies` de `[project]`.
 
 ---
 
@@ -238,7 +229,6 @@ No VS Code/Cursor, com a extensão Ruff instalada e o interpretador apontando pa
 - **Como apontar para o `.venv`:** abra a Paleta de Comandos (**Ctrl+Shift+P** ou **Cmd+Shift+P** no macOS), digite **“Python: Select Interpreter”** e selecione o interpretador que mostra o ambiente do projeto (ex.: **Python 3.12.x ('.venv': venv)**). Outra opção é clicar na versão do Python exibida na **barra de status** (canto inferior direito) e escolher o `.venv` na lista.
 
 - **Como saber se o Ruff está funcionando:** com o interpretador correto e a extensão Ruff ativa, ao abrir um arquivo Python você verá **sublinhados ou marcados** em trechos que o Ruff sinaliza (imports não usados, estilo, etc.); ao passar o mouse, aparece a regra (ex.: “Unused import”). Se “Format on Save” estiver ligado nas configurações do projeto, ao salvar (**Ctrl+S**) o arquivo será formatado pelo Ruff. O projeto inclui um exemplo de código com erros em **`src/my_project/utils/add_wrong.py`**: abra esse arquivo e confira os avisos do linter. Os erros apontados são:
-
   - **Pyright (type hints):** o tipo de retorno está declarado como `-> str`, mas a função devolve `a + b` (um número). O analisador indica algo como “Expression of type \"float\" is incompatible with return type \"str\"” — o correto seria `-> float`.
 
   - **Ruff (RET504):** a variável `c` recebe `a + b` e em seguida é usada só no `return c`. O Ruff sinaliza que essa atribuição é desnecessária e sugere retornar diretamente: `return a + b`.
@@ -246,31 +236,6 @@ No VS Code/Cursor, com a extensão Ruff instalada e o interpretador apontando pa
 - **Por que corrigir tudo o que o Ruff (e o Pyright) apontam?** Mesmo que o código rode, vale a pena resolver todos os avisos e erros. Seguir as orientações do Ruff **facilita o desenvolvimento**: o código fica mais legível, previsível e fácil de manter; reduz bugs (imports não usados, variáveis inacessíveis, type hints incorretos); e **reduz escolhas de estilo** — todo o projeto passa a seguir as mesmas regras (aspas, quebras de linha, ordem de imports, etc.). Em resumo: tratar o Ruff como obrigatório mantém o projeto consistente e poupa tempo no longo prazo.
 
 - **Type hints e docstrings:** o template espera o uso de **type hints** (anotações de tipo) e **docstrings** nas funções e módulos; o Ruff e o Pyright ajudam a cobrar e checar isso. **Type hints** documentam os tipos dos parâmetros e do retorno (ex.: `def add(a: float, b: float) -> float`), melhoram o autocomplete e a detecção de erros na IDE e permitem que ferramentas como o Pyright encontrem bugs antes da execução. **Docstrings** descrevem o que a função ou o módulo faz, os argumentos e o retorno em linguagem natural, facilitando a leitura e a manutenção do código e o uso por outras pessoas (ou por você no futuro). Leitura extra: [PEP 484](https://peps.python.org/pep-0484/) (Type Hints), [PEP 3107](https://peps.python.org/pep-3107/) (sintaxe de anotações) e [PEP 257](https://peps.python.org/pep-0257/) (convenções para docstrings).
-
----
-
-### Passo 8: Testes (Pytest)
-
-Os testes são **recomendados**, mas **opcionais**: você pode usar o template sem escrever testes, se preferir.
-
-**Por que escrever testes?** **Testes unitários** verificam funções ou classes isoladas (ex.: que `add(1, 1)` retorna `2`), ajudam a garantir que cada parte do código se comporta como esperado e facilitam refatorar sem quebrar o que já funciona. **Testes de integração** verificam que várias partes do sistema funcionam juntas (ex.: que o `main` chama corretamente as funções de `utils` e produz a saída esperada). Em conjunto, testes dão confiança para alterar o código, documentam o comportamento esperado e reduzem bugs. Se quiser adotar testes no projeto, o template já está preparado.
-
-O template está configurado para testes na pasta `tests/`, com código em `src/`. O Pytest descobre automaticamente arquivos cujo nome comece com `test_` e funções cujo nome comece com `test_`. Documentação oficial: [pytest](https://docs.pytest.org/).
-
-1. O template já inclui o arquivo **`tests/test_add.py`** com testes para a função `add` (e para `add_wrong`; veja abaixo). Você pode usar esse arquivo como modelo para outros testes.
-2. Rode os testes e observe o resultado:
-
-   ```bash
-   uv run pytest
-   ```
-
-   Todos os testes em `tests/test_add.py` devem passar. O arquivo testa tanto a função `add` (correta) quanto a função `add_wrong` (com type hint de retorno errado, em `utils/add_wrong.py`): os testes para `add_wrong` também passam, porque **em tempo de execução** as duas funções se comportam igual — ambas retornam a soma dos números. Isso ilustra que **type hints não têm influência em runtime**: o Python ignora as anotações ao executar; elas servem para ferramentas estáticas (Pyright, IDE) e para documentação. Por isso é importante corrigir os erros do linter mesmo quando “o código roda”.
-
-Para mais detalhes na saída:
-
-```bash
-uv run pytest -v
-```
 
 ---
 
@@ -296,7 +261,6 @@ raiz_do_projeto/
 │       ├── main.py            # ponto de entrada
 │       └── utils/             # funções auxiliares reutilizáveis
 │           ├── __init__.py
-└── tests/
 ```
 
 ### Arquivos na raiz
@@ -336,7 +300,6 @@ A pasta **`src/<projeto>/utils/`** serve para **adicionar funções auxiliares**
    Se não exportar no `__init__.py`, você pode importar direto do módulo (veja o passo 3).
 
 3. **Importe e use no `main.py`** (ou em qualquer outro módulo do projeto). Duas formas:
-
    - **Se exportou no `__init__.py`:** `from my_project.utils import add`
    - **Importando direto do módulo:** `from my_project.utils.add import add`
 
@@ -375,7 +338,6 @@ Em resumo: **`main.py`** é o coração do projeto (o que você roda no dia a di
 | **`src/<projeto>/`**        | Sim          | Pacote principal. O nome da pasta deve ser o mesmo do projeto (definido no `pyproject.toml`). Todo o código importável do projeto fica aqui.                                                                                    |
 | **`src/<projeto>/main.py`** | Sim          | Ponto de entrada do projeto. É o que roda quando você executa `uv run nome_do_projeto`. Concentre aqui a orquestração e as chamadas às funções em `utils` ou outros módulos.                                                    |
 | **`src/<projeto>/utils/`**  | Uso geral    | **Funções auxiliares** reutilizáveis (ex.: `add`). Crie um arquivo por função (ou grupo de funções), exporte no `utils/__init__.py` e importe no `main` ou em outros módulos com `from my_project.utils import nome_da_funcao`. |
-| **`tests/`**                | Recomendado  | Testes (Pytest). Crie arquivos `test_*.py` e rode com `uv run pytest`. O `pyproject.toml` já configura `pythonpath = ["src"]` para importar o pacote.                                                                           |
 
 ---
 
