@@ -1,22 +1,22 @@
 # Mude o nome do "my_project" para o nome do seu projeto
 
 [project]
-name = "my_project" 
+name = "my_project" # Altere "my_project" para o nome do seu projeto
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12" # Altere "3.12" para a versão do Python que você deseja usar
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["ruff", "pyright", "pytest"]
+dev = ["ruff", "pyright"]
 
 [project.scripts]
-my_project = "my_project.main:main" 
+my_project = "my_project.main:main" # Altere "my_project" para o nome do seu projeto
 
 [tool.ruff]
 line-length = 88
-target-version = "py312"
+target-version = "py312" # Altere "py312" para a versão do Python que você deseja usar
 fix = true
 show-fixes = true
 indent-width = 4
@@ -39,14 +39,14 @@ line-ending = "lf"
 docstring-code-format = true
 
 [tool.ruff.lint.isort]
-known-first-party = ["my_project"]
+known-first-party = ["my_project"] # Altere "my_project" para o nome do seu projeto
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.pyright]
 typeCheckingMode = "strict"
-pythonVersion = "3.12"
+pythonVersion = "3.12" # Altere "3.12" para a versão do Python que você deseja usar
 include = ["src"]
 exclude = [
     "**/venv",
@@ -60,11 +60,6 @@ venv = ".venv"
 venvPath = "."
 executionEnvironments = [{ root = "src" }]
 
-[tool.pytest.ini_options]
-addopts = "-s --color=yes --tb=short"
-pythonpath = ["src"]
-testpaths = ["tests"]
-
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
@@ -72,7 +67,6 @@ build-backend = "setuptools.build_meta"
 [dependency-groups]
 dev = [
     "pyright>=1.1.408",
-    "pytest>=9.0.2",
     "ruff>=0.14.14",
 ]
 
