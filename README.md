@@ -235,7 +235,7 @@ No VS Code/Cursor, com a extensão Ruff instalada e o interpretador apontando pa
 
 - **Por que corrigir tudo o que o Ruff (e o Pyright) apontam?** Mesmo que o código rode, vale a pena resolver todos os avisos e erros. Seguir as orientações do Ruff **facilita o desenvolvimento**: o código fica mais legível, previsível e fácil de manter; reduz bugs (imports não usados, variáveis inacessíveis, type hints incorretos); e **reduz escolhas de estilo** — todo o projeto passa a seguir as mesmas regras (aspas, quebras de linha, ordem de imports, etc.). Em resumo: tratar o Ruff como obrigatório mantém o projeto consistente e poupa tempo no longo prazo.
 
-- **Type hints e docstrings:** o template espera o uso de **type hints** (anotações de tipo) e **docstrings** nas funções e módulos; o Ruff e o Pyright ajudam a cobrar e checar isso. **Type hints** documentam os tipos dos parâmetros e do retorno (ex.: `def add(a: float, b: float) -> float`), melhoram o autocomplete e a detecção de erros na IDE e permitem que ferramentas como o Pyright encontrem bugs antes da execução. **Docstrings** descrevem o que a função ou o módulo faz, os argumentos e o retorno em linguagem natural, facilitando a leitura e a manutenção do código e o uso por outras pessoas (ou por você no futuro). Leitura extra: [PEP 484](https://peps.python.org/pep-0484/) (Type Hints), [PEP 3107](https://peps.python.org/pep-3107/) (sintaxe de anotações) e [PEP 257](https://peps.python.org/pep-0257/) (convenções para docstrings).
+- **Type hints e docstrings:** o template espera o uso de **type hints** (anotações de tipo) e **docstrings** nas funções e módulos; o Ruff e o Pyright ajudam a cobrar e checar isso. **Type hints** documentam os tipos dos parâmetros e do retorno (ex.: `def add(a: float, b: float) -> float`), melhoram o autocomplete e a detecção de erros na IDE e permitem que ferramentas como o Pyright encontrem bugs antes da execução. **Docstrings** descrevem o que a função ou o módulo faz, os argumentos e o retorno em linguagem natural, facilitando a leitura e a manutenção do código e o uso por outras pessoas (ou por você no futuro). Leitura extra: [PEP 484](https://peps.python.org/pep-0484/) (Type Hints), [PEP 3107](https://peps.python.org/pep-3107/) (sintaxe de anotações) e [PEP 257](https://peps.python.org/pep-0257/) (convenções para docstrings). **Leitura complementar no repositório:** [Type hints com bibliotecas de terceiros](docs/type-hints-bibliotecas-terceiros.md) — NumPy, Matplotlib e como lidar com tipos `Unknown` no Pyright strict.
 
 ---
 
@@ -253,6 +253,8 @@ raiz_do_projeto/
 │   └── extensions.json
 ├── pyproject.toml
 ├── README.md
+├── docs/                      # documentação complementar do template
+│   └── type-hints-bibliotecas-terceiros.md
 ├── scripts/                   # scripts auxiliares (gráficos, análises, etc.)
 │   └── __init__.py
 ├── src/
@@ -278,6 +280,8 @@ raiz_do_projeto/
 - `.vscode/extensions.json`: Extensões recomendadas (Python, Ruff, tema Dracula, etc.).
 
 - `README.md`: Este arquivo: instruções de uso do template.
+
+- `docs/`: Documentação complementar. Inclui [Type hints com bibliotecas de terceiros](docs/type-hints-bibliotecas-terceiros.md) — guia para anotar código que usa NumPy, Matplotlib e outras dependências com tipagem incompleta.
 
 ### A pasta `utils`: funções auxiliares
 
